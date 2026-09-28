@@ -17,5 +17,5 @@ Créditos: https://github.com/WangXuan95/FPGA-SDcard-Reader
 | CLOCK_50 | PIN_Y2 | input |
 | KEY0 | PIN_M23 | input |
 | LEDR[0..3] | PIN_G19, F19, E19, F21 | output |
-| HEX0[0..6] | Verificar manual | output |
-| HEX1[0..6] | Verificar manual | output |
+| HEX0[0..6] | PIN_G18, F22, E17, L26, L25, J22, H22 | output |
+| HEX1[0..6] | PIN_M24, Y22, W21, W22, W25, U23, U24 | output |
