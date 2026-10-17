@@ -1,0 +1,141 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1100 790" width="1100" height="790" font-family="DejaVu Sans, Helvetica, Arial, sans-serif">
+<defs><marker id="h" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#1F2933"/></marker><marker id="hc" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#2F6DB5"/></marker></defs>
+<rect width="1100" height="790" fill="#FFFFFF"/>
+<text x="30" y="28" font-size="18" font-weight="700" fill="#1F2933">Fluxo do projeto: do cartão SD à saída de áudio</text>
+<text x="30" y="46" font-size="11.5" fill="#5B6573">Os números indicam a ordem do sinal. A linha 2 corre da direita para a esquerda.</text>
+<text x="30" y="68" font-size="12" font-weight="700" fill="#5B6573">ENTRADA</text>
+<rect x="30" y="100" width="150" height="84" rx="8" fill="#FFFFFF" stroke="#8A94A3" stroke-width="2"/>
+<text x="46" y="124" font-size="13.5" font-weight="700" fill="#1F2933">Cartão SD</text>
+<text x="46" y="143" font-size="11.5" fill="#1F2933">voice.wav</text>
+<text x="46" y="159" font-size="11.5" fill="#1F2933">(FAT32, mono 16 bits)</text>
+<circle cx="30" cy="100" r="12" fill="#1F2933"/><text x="30" y="104.5" font-size="13" font-weight="700" text-anchor="middle" fill="#fff">1</text>
+<rect x="290" y="100" width="200" height="84" rx="8" fill="#DDF3E4" stroke="#2E7D32" stroke-width="2"/>
+<text x="306" y="124" font-size="13.5" font-weight="700" fill="#1F2933">sd_file_reader</text>
+<text x="306" y="143" font-size="11.5" fill="#1F2933">(sd_reader + sdcmd_ctrl)</text>
+<text x="306" y="159" font-size="11.5" fill="#1F2933">lê o arquivo setor a setor</text>
+<text x="480" y="176" font-size="10.5" font-weight="700" text-anchor="end" fill="#2E7D32">testado na FPGA</text>
+<circle cx="290" cy="100" r="12" fill="#1F2933"/><text x="290" y="104.5" font-size="13" font-weight="700" text-anchor="middle" fill="#fff">2</text>
+<rect x="600" y="100" width="170" height="84" rx="8" fill="#FFF0C9" stroke="#B7791F" stroke-width="2"/>
+<text x="616" y="124" font-size="13.5" font-weight="700" fill="#1F2933">wav_reader</text>
+<text x="616" y="143" font-size="11.5" fill="#1F2933">descarta header (44 B)</text>
+<text x="616" y="159" font-size="11.5" fill="#1F2933">monta amostras int16</text>
+<text x="760" y="176" font-size="10.5" font-weight="700" text-anchor="end" fill="#B7791F">escrito · não testado</text>
+<circle cx="600" cy="100" r="12" fill="#1F2933"/><text x="600" y="104.5" font-size="13" font-weight="700" text-anchor="middle" fill="#fff">3</text>
+<rect x="870" y="100" width="200" height="84" rx="8" fill="#ECEFF3" stroke="#5B6573" stroke-width="2"/>
+<text x="886" y="124" font-size="13.5" font-weight="700" fill="#1F2933">wav_buffer</text>
+<text x="886" y="143" font-size="11.5" fill="#1F2933">FIFO / ping-pong</text>
+<text x="886" y="159" font-size="11.5" fill="#1F2933">guarda ≥ 1 setor (256 am.)</text>
+<text x="1060" y="176" font-size="10.5" font-weight="700" text-anchor="end" fill="#5B6573">a fazer</text>
+<circle cx="870" cy="100" r="12" fill="#1F2933"/><text x="870" y="104.5" font-size="13" font-weight="700" text-anchor="middle" fill="#fff">4</text>
+<path d="M180,142 L290,142" fill="none" stroke="#1F2933" stroke-width="2.2" marker-end="url(#h)"/>
+<text x="235" y="132" font-size="10.5" text-anchor="middle" fill="#1F2933">leitura SD</text>
+<text x="235" y="160" font-size="10.5" text-anchor="middle" fill="#1F2933">(CMD / DAT0)</text>
+<path d="M490,142 L600,142" fill="none" stroke="#1F2933" stroke-width="2.2" marker-end="url(#h)"/>
+<text x="545" y="132" font-size="10.5" text-anchor="middle" fill="#1F2933">bytes</text>
+<text x="545" y="160" font-size="10.5" text-anchor="middle" fill="#1F2933">outen + outbyte</text>
+<path d="M770,142 L870,142" fill="none" stroke="#1F2933" stroke-width="2.2" marker-end="url(#h)"/>
+<text x="820" y="132" font-size="10.5" text-anchor="middle" fill="#1F2933">int16</text>
+<text x="820" y="160" font-size="10.5" text-anchor="middle" fill="#1F2933">sample_valid</text>
+<path d="M920,100 L920,80 L390,80 L390,100" fill="none" stroke="#2F6DB5" stroke-width="1.8" stroke-dasharray="6 4" marker-end="url(#hc)"/>
+<text x="655" y="73" font-size="10.5" text-anchor="middle" fill="#2F6DB5">can_read: só pede o próximo setor se o buffer tiver espaço</text>
+<path d="M1010,184 L1010,290" fill="none" stroke="#1F2933" stroke-width="2.2" marker-end="url(#h)"/>
+<text x="1000" y="232" font-size="10.5" text-anchor="end" fill="#1F2933">1 amostra por pedido</text>
+<text x="1000" y="246" font-size="10.5" text-anchor="end" fill="#1F2933">(pull)</text>
+<rect x="15" y="250" width="1070" height="164" rx="10" fill="none" stroke="#8A94A3" stroke-width="1.5" stroke-dasharray="3 4"/>
+<text x="200" y="405" font-size="11" fill="#5B6573">dsp_core: roda 1 vez a cada sample_req e puxa 1 amostra do wav_buffer</text>
+<rect x="870" y="290" width="200" height="96" rx="8" fill="#ECEFF3" stroke="#5B6573" stroke-width="2"/>
+<text x="886" y="314" font-size="13.5" font-weight="700" fill="#1F2933">fir_mac (FIR 101 taps)</text>
+<text x="886" y="333" font-size="11.5" fill="#1F2933">ROM de coeficientes:</text>
+<text x="886" y="349" font-size="11.5" fill="#1F2933">SW0=0 → passa-alta 600 Hz</text>
+<text x="886" y="365" font-size="11.5" fill="#1F2933">SW0=1 → passa-baixa 1,6 kHz</text>
+<text x="1060" y="378" font-size="10.5" font-weight="700" text-anchor="end" fill="#5B6573">a fazer</text>
+<circle cx="870" cy="290" r="12" fill="#1F2933"/><text x="870" y="294.5" font-size="13" font-weight="700" text-anchor="middle" fill="#fff">5</text>
+<rect x="1016" y="280" width="48" height="18" rx="9" fill="#FFE8D9" stroke="#E8590C" stroke-width="1.5"/><text x="1040" y="293" font-size="10.5" font-weight="700" text-anchor="middle" fill="#E8590C">◆ SW0</text>
+<rect x="600" y="290" width="170" height="96" rx="8" fill="#ECEFF3" stroke="#5B6573" stroke-width="2"/>
+<text x="616" y="314" font-size="13.5" font-weight="700" fill="#1F2933">saturação (tanh)</text>
+<text x="616" y="333" font-size="11.5" fill="#1F2933">y = 0,6·tanh(2x)</text>
+<text x="616" y="349" font-size="11.5" fill="#1F2933">só no Vader</text>
+<text x="760" y="378" font-size="10.5" font-weight="700" text-anchor="end" fill="#5B6573">a fazer</text>
+<circle cx="600" cy="290" r="12" fill="#1F2933"/><text x="600" y="294.5" font-size="13" font-weight="700" text-anchor="middle" fill="#fff">6</text>
+<rect x="716" y="280" width="48" height="18" rx="9" fill="#FFE8D9" stroke="#E8590C" stroke-width="1.5"/><text x="740" y="293" font-size="10.5" font-weight="700" text-anchor="middle" fill="#E8590C">◆ SW0</text>
+<rect x="290" y="290" width="200" height="96" rx="8" fill="#ECEFF3" stroke="#5B6573" stroke-width="2"/>
+<text x="306" y="314" font-size="13.5" font-weight="700" fill="#1F2933">comb_filter</text>
+<text x="306" y="333" font-size="11.5" fill="#1F2933">atraso 1102 am. (25 ms)</text>
+<text x="306" y="349" font-size="11.5" fill="#1F2933">y[n] = x[n] + 0,6·x[n−1102]</text>
+<text x="306" y="365" font-size="11.5" fill="#1F2933">só no Vader</text>
+<text x="480" y="378" font-size="10.5" font-weight="700" text-anchor="end" fill="#5B6573">a fazer</text>
+<circle cx="290" cy="290" r="12" fill="#1F2933"/><text x="290" y="294.5" font-size="13" font-weight="700" text-anchor="middle" fill="#fff">7</text>
+<rect x="436" y="280" width="48" height="18" rx="9" fill="#FFE8D9" stroke="#E8590C" stroke-width="1.5"/><text x="460" y="293" font-size="10.5" font-weight="700" text-anchor="middle" fill="#E8590C">◆ SW0</text>
+<rect x="30" y="290" width="160" height="96" rx="8" fill="#ECEFF3" stroke="#5B6573" stroke-width="2"/>
+<text x="46" y="314" font-size="13.5" font-weight="700" fill="#1F2933">seletor (mux)</text>
+<text x="46" y="333" font-size="11.5" fill="#1F2933">SW0=0 → saída do FIR</text>
+<text x="46" y="349" font-size="11.5" fill="#1F2933">SW0=1 → saída do comb</text>
+<text x="180" y="378" font-size="10.5" font-weight="700" text-anchor="end" fill="#5B6573">a fazer</text>
+<circle cx="30" cy="290" r="12" fill="#1F2933"/><text x="30" y="294.5" font-size="13" font-weight="700" text-anchor="middle" fill="#fff">8</text>
+<rect x="136" y="280" width="48" height="18" rx="9" fill="#FFE8D9" stroke="#E8590C" stroke-width="1.5"/><text x="160" y="293" font-size="10.5" font-weight="700" text-anchor="middle" fill="#E8590C">◆ SW0</text>
+<path d="M870,338 L770,338" fill="none" stroke="#1F2933" stroke-width="2.2" marker-end="url(#h)"/>
+<text x="820" y="330" font-size="10.5" text-anchor="middle" fill="#1F2933">int16</text>
+<path d="M600,338 L490,338" fill="none" stroke="#1F2933" stroke-width="2.2" marker-end="url(#h)"/>
+<text x="545" y="330" font-size="10.5" text-anchor="middle" fill="#1F2933">int16</text>
+<path d="M290,338 L190,338" fill="none" stroke="#1F2933" stroke-width="2.2" marker-end="url(#h)"/>
+<text x="240" y="330" font-size="10.5" text-anchor="middle" fill="#1F2933">int16</text>
+<path d="M900,290 L900,267 L105,267 L105,290" fill="none" stroke="#1F2933" stroke-width="2.2" marker-end="url(#h)"/>
+<text x="500" y="262" font-size="10.5" text-anchor="middle" fill="#1F2933">Hélio (SW0=0): o sinal pula a saturação e o comb</text>
+<path d="M140,386 L140,470" fill="none" stroke="#1F2933" stroke-width="2.2" marker-end="url(#h)"/>
+<text x="147" y="432" font-size="10.5" text-anchor="start" fill="#1F2933">int16</text>
+<path d="M50,470 L50,414" fill="none" stroke="#2F6DB5" stroke-width="1.8" stroke-dasharray="6 4" marker-end="url(#hc)"/>
+<text x="57" y="438" font-size="10.5" text-anchor="start" fill="#2F6DB5">sample_req</text>
+<text x="57" y="452" font-size="10.5" text-anchor="start" fill="#2F6DB5">(a cada LRCK)</text>
+<text x="340" y="458" font-size="12" font-weight="700" fill="#5B6573">SAÍDA DE ÁUDIO</text>
+<rect x="30" y="470" width="170" height="84" rx="8" fill="#ECEFF3" stroke="#5B6573" stroke-width="2"/>
+<text x="46" y="494" font-size="13.5" font-weight="700" fill="#1F2933">i2s_tx</text>
+<text x="46" y="513" font-size="11.5" fill="#1F2933">serializa 16 bits</text>
+<text x="46" y="529" font-size="11.5" fill="#1F2933">L = R (mono)</text>
+<text x="190" y="546" font-size="10.5" font-weight="700" text-anchor="end" fill="#5B6573">a fazer</text>
+<circle cx="30" cy="470" r="12" fill="#1F2933"/><text x="30" y="474.5" font-size="13" font-weight="700" text-anchor="middle" fill="#fff">9</text>
+<rect x="330" y="470" width="230" height="84" rx="8" fill="#FFFFFF" stroke="#8A94A3" stroke-width="2"/>
+<text x="346" y="494" font-size="13.5" font-weight="700" fill="#1F2933">Codec WM8731</text>
+<text x="346" y="513" font-size="11.5" fill="#1F2933">DAC → saída analógica</text>
+<text x="346" y="529" font-size="11.5" fill="#1F2933">slave: usa clocks do FPGA</text>
+<circle cx="330" cy="470" r="12" fill="#1F2933"/><text x="330" y="474.5" font-size="13" font-weight="700" text-anchor="middle" fill="#fff">10</text>
+<rect x="690" y="470" width="180" height="84" rx="8" fill="#FFFFFF" stroke="#8A94A3" stroke-width="2"/>
+<text x="706" y="494" font-size="13.5" font-weight="700" fill="#1F2933">Saída de áudio</text>
+<text x="706" y="513" font-size="11.5" fill="#1F2933">LINE OUT / fone</text>
+<text x="706" y="529" font-size="11.5" fill="#1F2933">da DE2-115</text>
+<circle cx="690" cy="470" r="12" fill="#1F2933"/><text x="690" y="474.5" font-size="13" font-weight="700" text-anchor="middle" fill="#fff">11</text>
+<path d="M200,498 L330,498" fill="none" stroke="#1F2933" stroke-width="2.2" marker-end="url(#h)"/>
+<text x="265" y="489" font-size="10.5" text-anchor="middle" fill="#1F2933">I2S</text>
+<text x="265" y="520" font-size="10.5" text-anchor="middle" fill="#1F2933">DACDAT/BCLK/LRCK</text>
+<path d="M560,512 L690,512" fill="none" stroke="#1F2933" stroke-width="2.2" marker-end="url(#h)"/>
+<text x="625" y="503" font-size="10.5" text-anchor="middle" fill="#1F2933">analógico</text>
+<text x="690" y="608" font-size="12" font-weight="700" fill="#5B6573">APOIO (controle e clock)</text>
+<rect x="30" y="620" width="230" height="96" rx="8" fill="#ECEFF3" stroke="#5B6573" stroke-width="2"/>
+<text x="46" y="644" font-size="13.5" font-weight="700" fill="#1F2933">Clock de áudio (PLL)</text>
+<text x="46" y="663" font-size="11.5" fill="#1F2933">gera MCLK, BCLK, LRCK</text>
+<text x="46" y="679" font-size="11.5" fill="#1F2933">SW0=0 → fs × 1,80 (79,4 kHz)</text>
+<text x="46" y="695" font-size="11.5" fill="#1F2933">SW0=1 → fs × 0,88 (38,8 kHz)</text>
+<text x="250" y="708" font-size="10.5" font-weight="700" text-anchor="end" fill="#5B6573">a fazer</text>
+<rect x="206" y="610" width="48" height="18" rx="9" fill="#FFE8D9" stroke="#E8590C" stroke-width="1.5"/><text x="230" y="623" font-size="10.5" font-weight="700" text-anchor="middle" fill="#E8590C">◆ SW0</text>
+<rect x="330" y="620" width="230" height="84" rx="8" fill="#ECEFF3" stroke="#5B6573" stroke-width="2"/>
+<text x="346" y="644" font-size="13.5" font-weight="700" fill="#1F2933">Nios II + I2C</text>
+<text x="346" y="663" font-size="11.5" fill="#1F2933">firmware em C</text>
+<text x="346" y="679" font-size="11.5" fill="#1F2933">configura o WM8731 no boot</text>
+<text x="550" y="696" font-size="10.5" font-weight="700" text-anchor="end" fill="#5B6573">a fazer</text>
+<rect x="690" y="620" width="250" height="84" rx="8" fill="#FFE8D9" stroke="#E8590C" stroke-width="2"/>
+<text x="706" y="644" font-size="13.5" font-weight="700" fill="#1F2933">Chave SW0 (DE2-115)</text>
+<text x="706" y="663" font-size="11.5" fill="#1F2933">0 = Hélio · 1 = Vader (sugestão)</text>
+<text x="706" y="679" font-size="11.5" fill="#1F2933">blocos com ◆ SW0 mudam com ela</text>
+<path d="M100,620 L100,554" fill="none" stroke="#2F6DB5" stroke-width="1.8" stroke-dasharray="6 4" marker-end="url(#hc)"/>
+<text x="107" y="592" font-size="10.5" text-anchor="start" fill="#2F6DB5">BCLK / LRCK</text>
+<path d="M260,668 L295,668 L295,534 L330,534" fill="none" stroke="#2F6DB5" stroke-width="1.8" stroke-dasharray="6 4" marker-end="url(#hc)"/>
+<text x="301" y="606" font-size="10.5" text-anchor="start" fill="#2F6DB5">MCLK</text>
+<path d="M445,620 L445,554" fill="none" stroke="#2F6DB5" stroke-width="1.8" stroke-dasharray="6 4" marker-end="url(#hc)"/>
+<text x="452" y="592" font-size="10.5" text-anchor="start" fill="#2F6DB5">I2C (configuração, 1x no boot)</text>
+<line x1="30" y1="735" x2="1070" y2="735" stroke="#D5DAE1"/>
+<rect x="30" y="740" width="16" height="16" rx="3" fill="#DDF3E4" stroke="#2E7D32" stroke-width="2"/><text x="52" y="753" font-size="11" fill="#1F2933">testado na FPGA</text>
+<rect x="190" y="740" width="16" height="16" rx="3" fill="#FFF0C9" stroke="#B7791F" stroke-width="2"/><text x="212" y="753" font-size="11" fill="#1F2933">escrito, ainda não testado</text>
+<rect x="400" y="740" width="16" height="16" rx="3" fill="#ECEFF3" stroke="#5B6573" stroke-width="2"/><text x="422" y="753" font-size="11" fill="#1F2933">a fazer</text>
+<rect x="490" y="740" width="16" height="16" rx="3" fill="#FFFFFF" stroke="#8A94A3" stroke-width="2"/><text x="512" y="753" font-size="11" fill="#1F2933">hardware / externo</text>
+<line x1="650" y1="748" x2="690" y2="748" stroke="#1F2933" stroke-width="2.2" marker-end="url(#h)"/><text x="698" y="752" font-size="11" fill="#1F2933">dados de áudio</text>
+<line x1="810" y1="748" x2="850" y2="748" stroke="#2F6DB5" stroke-width="1.8" stroke-dasharray="6 4" marker-end="url(#hc)"/><text x="858" y="752" font-size="11" fill="#1F2933">controle / clock</text>
+</svg>
