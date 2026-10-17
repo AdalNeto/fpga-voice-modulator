@@ -24,6 +24,10 @@ module sd_file_reader #(
     input  wire       rstn,
     // clock
     input  wire       clk,
+
+    // INPUT ADICIONADO: 1 = o consumidor (DSP/I2S) tem espaço para mais um pacote (256 amostras)
+    input  wire       can_read,
+
     // SDcard signals (connect to SDcard), this design do not use sddat1~sddat3.
     output wire       sdclk,
     inout             sdcmd,
@@ -309,7 +313,7 @@ always @ (posedge clk or negedge rstn)
                 SEARCH_DBR    : read_start <= 1'b1;
                 LS_ROOT_FAT16 : read_start <= 1'b1;
                 LS_ROOT_FAT32 : read_start <= 1'b1;
-                READ_A_FILE   : read_start <= 1'b1;
+                READ_A_FILE   : read_start <= can_read;   // ADDED: only request the next sector when the buffer has room
                 //DONE          : $finish;
             endcase
         end
