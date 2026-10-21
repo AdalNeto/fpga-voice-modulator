@@ -1,0 +1,50 @@
+D:/fpga-voice-modulator-main/sim/tb_wav_buffer/top_wav_buf_test.v {1 {vlog -work work -stats=none {D:\fpga-voice-modulator-main\sim\tb_wav_buffer\top_wav_buf_test.v}
+Model Technology ModelSim - Intel FPGA Edition vlog 2020.1 Compiler 2020.02 Feb 28 2020
+-- Compiling module top_wav_buf_test
+
+Top level modules:
+	top_wav_buf_test
+
+} {} {}} D:/fpga-voice-modulator-main/sim/tb_wav_buffer/wav_buffer.v {1 {vlog -work work -stats=none D:/fpga-voice-modulator-main/sim/tb_wav_buffer/wav_buffer.v
+Model Technology ModelSim - Intel FPGA Edition vlog 2020.1 Compiler 2020.02 Feb 28 2020
+-- Compiling module wav_buffer
+
+Top level modules:
+	wav_buffer
+
+} {} {}} D:/fpga-voice-modulator-main/sim/tb_wav_buffer/sdcmd_ctrl.v {1 {vlog -work work -stats=none D:/fpga-voice-modulator-main/sim/tb_wav_buffer/sdcmd_ctrl.v
+Model Technology ModelSim - Intel FPGA Edition vlog 2020.1 Compiler 2020.02 Feb 28 2020
+-- Compiling module sdcmd_ctrl
+
+Top level modules:
+	sdcmd_ctrl
+
+} {} {}} D:/fpga-voice-modulator-main/sim/tb_wav_buffer/wav_reader.v {1 {vlog -work work -stats=none D:/fpga-voice-modulator-main/sim/tb_wav_buffer/wav_reader.v
+Model Technology ModelSim - Intel FPGA Edition vlog 2020.1 Compiler 2020.02 Feb 28 2020
+-- Compiling module wav_reader
+
+Top level modules:
+	wav_reader
+
+} {} {}} D:/fpga-voice-modulator-main/sim/tb_wav_buffer/sd_file_reader.v {1 {vlog -work work -stats=none D:/fpga-voice-modulator-main/sim/tb_wav_buffer/sd_file_reader.v
+Model Technology ModelSim - Intel FPGA Edition vlog 2020.1 Compiler 2020.02 Feb 28 2020
+-- Compiling module sd_file_reader
+
+Top level modules:
+	sd_file_reader
+
+} {} {}} D:/fpga-voice-modulator-main/sim/tb_wav_buffer/sd_reader.v {1 {vlog -work work -stats=none {D:\fpga-voice-modulator-main\sim\tb_wav_buffer\sd_reader.v}
+Model Technology ModelSim - Intel FPGA Edition vlog 2020.1 Compiler 2020.02 Feb 28 2020
+-- Compiling module sd_reader
+
+Top level modules:
+	sd_reader
+
+} {} {}} D:/fpga-voice-modulator-main/sim/tb_wav_buffer/sd_card_mock.v {1 {vlog -work work -stats=none D:/fpga-voice-modulator-main/sim/tb_wav_buffer/sd_card_mock.v
+Model Technology ModelSim - Intel FPGA Edition vlog 2020.1 Compiler 2020.02 Feb 28 2020
+-- Compiling module sd_card_mock
+
+Top level modules:
+	sd_card_mock
+
+} {} {}}
