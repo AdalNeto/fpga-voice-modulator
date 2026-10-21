@@ -1,0 +1,77 @@
+m255
+K4
+z2
+!s11f vlog 2020.1 2020.02, Feb 28 2020
+13
+!s112 1.1
+!i10d 8192
+!i10e 25
+!i10f 100
+cModel Technology
+dD:/intelFPGA
+vfir_mac
+Z0 !s110 1792603127
+!i10b 1
+!s100 Y4J8_>JzcHi@_T^3AOO4h3
+Z1 !s11b Dg1SIo80bB@j0V0VzS_@n1
+Ij@0jnID`9Kmc_c:kCPSjc3
+Z2 VDg1SIo80bB@j0V0VzS_@n1
+Z3 dD:/fpga-voice-modulator/sim/tb_fir_mac
+w1792603083
+8fir_mac.v
+Ffir_mac.v
+!i122 15
+L0 10 160
+Z4 OV;L;2020.1;71
+r1
+!s85 0
+31
+Z5 !s108 1792603127.000000
+!s107 tb_fir_mac.v|fir_rom.v|fir_mac.v|
+Z6 !s90 -reportprogress|300|fir_mac.v|fir_rom.v|tb_fir_mac.v|
+!i113 1
+Z7 tCvgOpt 0
+vfir_rom
+R0
+!i10b 1
+!s100 hA@meNb9aZ9]]i2;C3L2G1
+R1
+IYJmY[_McM;EE5Wh6gW;gn1
+R2
+R3
+w1792599637
+8fir_rom.v
+Ffir_rom.v
+!i122 15
+L0 9 32
+R4
+r1
+!s85 0
+31
+R5
+Z8 !s107 tb_fir_mac.v|fir_rom.v|fir_mac.v|
+R6
+!i113 1
+R7
+vtb_fir_mac
+R0
+!i10b 1
+!s100 TVzS^@P07:<n<J3ZLKlHd2
+R1
+Iz@4>gDVlKm6emFoiMAgl11
+R2
+R3
+w1792602789
+8tb_fir_mac.v
+Ftb_fir_mac.v
+!i122 15
+L0 12 154
+R4
+r1
+!s85 0
+31
+R5
+R8
+R6
+!i113 1
+R7
