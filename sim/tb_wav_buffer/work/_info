@@ -1,0 +1,187 @@
+m255
+K4
+z2
+!s11f vlog 2020.1 2020.02, Feb 28 2020
+13
+!s112 1.1
+!i10d 8192
+!i10e 25
+!i10f 100
+cModel Technology
+Z0 dD:/fpga-voice-modulator-main/sim/tb_wav_buffer
+vsd_card_mock
+Z1 !s110 1792562313
+!i10b 1
+!s100 BGWBY07cE]]5QBecJEKL:2
+Z2 !s11b Dg1SIo80bB@j0V0VzS_@n1
+IW0j?fYi85=]2QAbBS4LP03
+Z3 VDg1SIo80bB@j0V0VzS_@n1
+R0
+Z4 w1792277567
+8sd_card_mock.v
+Fsd_card_mock.v
+!i122 27
+L0 3 155
+Z5 OV;L;2020.1;71
+r1
+!s85 0
+31
+Z6 !s108 1792562313.000000
+!s107 wav_reader.v|wav_buffer.v|top_wav_buf_test.v|tb_top_wav_buf_test.v|sdcmd_ctrl.v|sd_reader.v|sd_file_reader.v|sd_card_mock.v|
+Z7 !s90 -reportprogress|300|sd_card_mock.v|sd_file_reader.v|sd_reader.v|sdcmd_ctrl.v|tb_top_wav_buf_test.v|top_wav_buf_test.v|wav_buffer.v|wav_reader.v|
+!i113 1
+Z8 tCvgOpt 0
+vsd_file_reader
+R1
+!i10b 1
+!s100 >TUnhAP7S6I>4TDZb3iOG2
+R2
+I?fTKdJh1nS<M=@OLZMIb[0
+R3
+R0
+w1792558660
+8sd_file_reader.v
+Fsd_file_reader.v
+!i122 27
+L0 11 557
+R5
+r1
+!s85 0
+31
+R6
+Z9 !s107 wav_reader.v|wav_buffer.v|top_wav_buf_test.v|tb_top_wav_buf_test.v|sdcmd_ctrl.v|sd_reader.v|sd_file_reader.v|sd_card_mock.v|
+R7
+!i113 1
+R8
+vsd_reader
+R1
+!i10b 1
+!s100 JD_WdIhbOkPzWnPFlCael1
+R2
+IZ0lKKnDEWo3[ObI[m_YJT3
+R3
+R0
+w1792561781
+8sd_reader.v
+Fsd_reader.v
+!i122 27
+L0 10 252
+R5
+r1
+!s85 0
+31
+R6
+R9
+R7
+!i113 1
+R8
+vsdcmd_ctrl
+R1
+!i10b 1
+!s100 >XSIkcDZUH482c15hU>jY1
+R2
+IMj>PSNGMVPOS?1VZ:@3=12
+R3
+R0
+w1791009082
+8sdcmd_ctrl.v
+Fsdcmd_ctrl.v
+!i122 27
+L0 10 130
+R5
+r1
+!s85 0
+31
+R6
+R9
+R7
+!i113 1
+R8
+vtb_top_wav_buf_test
+R1
+!i10b 1
+!s100 XY=n?5GMU5g[[]M0C>2EP2
+R2
+IdUFTU441L2EO^Q9d6=>RF2
+R3
+R0
+w1792562301
+8tb_top_wav_buf_test.v
+Ftb_top_wav_buf_test.v
+!i122 27
+L0 3 121
+R5
+r1
+!s85 0
+31
+R6
+R9
+R7
+!i113 1
+R8
+vtop_wav_buf_test
+R1
+!i10b 1
+!s100 aR6X<LGYmi88c:jFVmPA81
+R2
+IzC`B7FOb4D[lCAlNH2K>91
+R3
+R0
+w1792561758
+8top_wav_buf_test.v
+Ftop_wav_buf_test.v
+!i122 27
+L0 10 74
+R5
+r1
+!s85 0
+31
+R6
+R9
+R7
+!i113 1
+R8
+vwav_buffer
+R1
+!i10b 1
+!s100 _zZK=18BY[QkkldgCOa=P2
+R2
+I2?0k;kkbj?VJ<mJh`<HaP3
+R3
+R0
+R4
+8wav_buffer.v
+Fwav_buffer.v
+!i122 27
+L0 26 99
+R5
+r1
+!s85 0
+31
+R6
+R9
+R7
+!i113 1
+R8
+vwav_reader
+R1
+!i10b 1
+!s100 @Th`TXcKd?9_F83Dj5Tjf2
+R2
+Iz]LZUniYl@C0<T6A;K^ko3
+R3
+R0
+R4
+8wav_reader.v
+Fwav_reader.v
+!i122 27
+L0 5 135
+R5
+r1
+!s85 0
+31
+R6
+R9
+R7
+!i113 1
+R8
