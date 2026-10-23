@@ -1,4 +1,3 @@
-
 //--------------------------------------------------------------------------------------------------------
 // Module  : sd_file_reader
 // Type    : synthesizable, IP's top
@@ -10,24 +9,15 @@
 //--------------------------------------------------------------------------------------------------------
 
 module sd_file_reader #(
-    parameter            FILE_NAME_LEN = 11           , // length of FILE_NAME (in bytes). Since the length of "example.txt" is 11, so here is 11.
+    parameter            FILE_NAME_LEN = 11           , // length of FILE_NAME (in bytes).
     parameter [52*8-1:0] FILE_NAME     = "example.txt", // file name to read, ignore upper and lower case
-                                                        // For example, if you want to read a file named "HeLLo123.txt", this parameter can be "hello123.TXT", "HELLO123.txt" or "HEllo123.Txt"
-    parameter      [2:0] CLK_DIV       = 3'd2,          // when clk =   0~ 25MHz , set CLK_DIV = 3'd1,
-                                                        // when clk =  25~ 50MHz , set CLK_DIV = 3'd2,
-                                                        // when clk =  50~100MHz , set CLK_DIV = 3'd3,
-                                                        // when clk = 100~200MHz , set CLK_DIV = 3'd4,
-                                                        // ......
-    parameter            SIMULATE      = 0              // 0:normal use.         1:only for simulation
+    parameter      [2:0] CLK_DIV       = 3'd2         , // when clk =  25~ 50MHz , set CLK_DIV = 3'd2
+    parameter            SIMULATE      = 0              // 0:normal use. 1:only for simulation
 ) (
     // rstn active-low, 1:working, 0:reset
     input  wire       rstn,
     // clock
     input  wire       clk,
-
-    // INPUT ADICIONADO: 1 = o consumidor (DSP/I2S) tem espaço para mais um pacote (256 amostras)
-    input  wire       can_read,
-
     // SDcard signals (connect to SDcard), this design do not use sddat1~sddat3.
     output wire       sdclk,
     inout             sdcmd,
@@ -37,6 +27,8 @@ module sd_file_reader #(
     output wire [1:0] card_type,         // 0=UNKNOWN    , 1=SDv1    , 2=SDv2  , 3=SDHCv2
     output wire [1:0] filesystem_type,   // 0=UNASSIGNED , 1=UNKNOWN , 2=FAT16 , 3=FAT32 
     output reg        file_found,        // 0=file not found, 1=file found
+    // flow control from buffer (1 = can read next sector, 0 = pause)
+    input  wire       can_read,          // MODIFICACAO: controle de fluxo pelo buffer
     // file content data output (sync with clk)
     output reg        outen,             // when outen=1, a byte of file content is read out from outbyte
     output reg  [7:0] outbyte            // a byte of file content
@@ -118,9 +110,6 @@ localparam [1:0] UNASSIGNED = 2'd0,
 
 reg        [1:0] filesystem = UNASSIGNED,
                  filesystem_parsed;
-
-//enum logic [2:0] {RESET, SEARCH_MBR, SEARCH_DBR, LS_ROOT_FAT16, LS_ROOT_FAT32, READ_A_FILE, DONE} filesystem_state = RESET;
-//enum logic [1:0] {UNASSIGNED, UNKNOWN, FAT16, FAT32} filesystem=UNASSIGNED, filesystem_parsed;
 
 assign filesystem_type = filesystem;
 
@@ -313,8 +302,8 @@ always @ (posedge clk or negedge rstn)
                 SEARCH_DBR    : read_start <= 1'b1;
                 LS_ROOT_FAT16 : read_start <= 1'b1;
                 LS_ROOT_FAT32 : read_start <= 1'b1;
-                READ_A_FILE   : read_start <= can_read;   // ADDED: only request the next sector when the buffer has room
-                //DONE          : $finish;
+                // MODIFICACAO: so pede o proximo setor de dados se can_read == 1 (ou se estiver buscando FAT)
+                READ_A_FILE   : if (can_read || search_fat) read_start <= 1'b1;
             endcase
         end
         
@@ -486,7 +475,6 @@ always @ (posedge clk or negedge rstn) begin
                         lastchar <= rdata;
                         fdtnamelen_t = fdtnamelen_t + 8'd1;
                     end else begin
-                        //automatic logic [15:0] unicode = {rdata,lastchar};
                         if({rdata,lastchar} == 16'h0000) begin
                             file_namelen <= fdtnamelen_t-8'd1 + (longno_t-8'd1)*8'd13;
                         end else if({rdata,lastchar} != 16'hFFFF) begin
