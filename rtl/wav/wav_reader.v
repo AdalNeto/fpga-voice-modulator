@@ -1,5 +1,5 @@
 // wav_reader.v
-// Parseia o header WAV (44 bytes) e extrai amostras PCM INT16
+// Parseia o header WAV (ajustado para 78 bytes com bloco LIST) e extrai amostras PCM INT16
 // Interface: recebe stream de bytes do sd_file_reader (outen/outbyte)
 
 module wav_reader (
@@ -17,30 +17,21 @@ module wav_reader (
 );
 
 // -------------------------------------------------------
-// Header WAV padrao (PCM nao comprimido, 44 bytes):
-//   0..3   "RIFF"
-//   4..7   tamanho total - 8
-//   8..11  "WAVE"
-//  12..15  "fmt "
-//  16..19  tamanho do chunk fmt (16 para PCM linear)
-//  20..21  AudioFormat (1 = PCM)
-//  22..23  NumChannels
-//  24..27  SampleRate
-//  28..31  ByteRate
-//  32..33  BlockAlign
-//  34..35  BitsPerSample
-//  36..39  "data"
-//  40..43  tamanho dos dados PCM em bytes
-//  44+     amostras PCM
+// Header WAV deste arquivo (78 bytes):
+//   0..35  RIFF + WAVE + chunk "fmt "
+//  36..69  Chunk "LIST" (34 bytes de metadados Lavf)
+//  70..73  "data"
+//  74..77  tamanho dos dados PCM em bytes
+//  78+     amostras PCM
 // -------------------------------------------------------
-localparam HEADER_SIZE = 44;
+localparam HEADER_SIZE = 78; // Alterado de 44 para 78
 
 localparam ST_HEADER = 2'd0;
 localparam ST_DATA   = 2'd1;
 localparam ST_DONE   = 2'd2;
 
 reg [1:0]  state;
-reg [7:0]  header_cnt;  // conta os 44 bytes do header (0..43)
+reg [7:0]  header_cnt;  // conta os 78 bytes do header (0..77)
 reg [31:0] data_bytes;  // total de bytes PCM extraido do header
 reg [31:0] data_read;   // bytes PCM ja consumidos
 
@@ -54,18 +45,18 @@ reg [15:0] bits_per_sample;
 
 always @(posedge clk or negedge rst_n) begin
     if (!rst_n) begin
-        state          <= ST_HEADER;
-        header_cnt     <= 0;
-        data_bytes     <= 0;
-        data_read      <= 0;
-        lsb_valid      <= 0;
-        sample_valid   <= 0;
-        stream_done    <= 0;
-        num_channels   <= 0;
-        sample_rate    <= 0;
-        bits_per_sample<= 0;
-        sample_out     <= 0;
-        lsb_byte       <= 0;
+        state           <= ST_HEADER;
+        header_cnt      <= 0;
+        data_bytes      <= 0;
+        data_read       <= 0;
+        lsb_valid       <= 0;
+        sample_valid    <= 0;
+        stream_done     <= 0;
+        num_channels    <= 0;
+        sample_rate     <= 0;
+        bits_per_sample <= 0;
+        sample_out      <= 0;
+        lsb_byte        <= 0;
     end else begin
         // Pulsos de saida: ativos apenas 1 ciclo
         sample_valid <= 0;
@@ -75,7 +66,7 @@ always @(posedge clk or negedge rst_n) begin
             case (state)
 
                 // ----------------------------------------
-                // ST_HEADER: consome 44 bytes, extrai campos
+                // ST_HEADER: consome 78 bytes, extrai campos
                 // ----------------------------------------
                 ST_HEADER: begin
                     case (header_cnt)
@@ -87,10 +78,11 @@ always @(posedge clk or negedge rst_n) begin
                         8'd27: sample_rate[31:24]    <= byte_in;
                         8'd34: bits_per_sample[7:0]  <= byte_in;
                         8'd35: bits_per_sample[15:8] <= byte_in;
-                        8'd40: data_bytes[7:0]       <= byte_in;
-                        8'd41: data_bytes[15:8]      <= byte_in;
-                        8'd42: data_bytes[23:16]     <= byte_in;
-                        8'd43: data_bytes[31:24]     <= byte_in;
+                        // Deslocado de 40..43 para 74..77:
+                        8'd74: data_bytes[7:0]       <= byte_in;
+                        8'd75: data_bytes[15:8]      <= byte_in;
+                        8'd76: data_bytes[23:16]     <= byte_in;
+                        8'd77: data_bytes[31:24]     <= byte_in;
                         default: ;
                     endcase
 
@@ -102,7 +94,7 @@ always @(posedge clk or negedge rst_n) begin
 
                 // ----------------------------------------
                 // ST_DATA: monta amostras INT16 little-endian
-                // byte par  → LSB  (bits 7:0  da amostra)
+                // byte par   → LSB (bits 7:0 da amostra)
                 // byte impar → MSB (bits 15:8 da amostra) → emite
                 // ----------------------------------------
                 ST_DATA: begin
