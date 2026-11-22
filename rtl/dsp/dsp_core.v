@@ -10,9 +10,9 @@
 
 module dsp_core #(
     // Caminhos dos arquivos .hex apontando para a pasta do repositório
-    parameter FILE_HELIO = "../fpga-voice-modulator/rtl/rom/fir_helio.hex",
-    parameter FILE_VADER = "../fpga-voice-modulator/rtl/rom/fir_vader.hex",
-    parameter FILE_TANH  = "../fpga-voice-modulator/rtl/rom/tanh_lut.hex"
+    parameter FILE_HELIO = "fir_helio.hex",
+    parameter FILE_VADER = "fir_vader.hex",
+    parameter FILE_TANH  = "tanh_lut.hex"
 )(
     input  wire        clk,
     input  wire        rst_n,
@@ -111,6 +111,6 @@ module dsp_core #(
     // sel_mode = 0 (Hélio): sinal sai direto do FIR
     // sel_mode = 1 (Vader): sinal sai do comb_filter após passar pelo FIR e tanh
     assign sample_out = (sel_mode == 1'b0) ? fir_sample_out : comb_sample_out;
-    assign out_valid  = (sel_mode == 1'b0) ? fir_out_valid  : comb_out_valid;
+	 assign out_valid = (sel_mode == 1'b0) ? fir_out_valid : comb_out_valid; 
 
 endmodule

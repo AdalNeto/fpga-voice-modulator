@@ -20,8 +20,8 @@
 //   LEDR[3] = leitura completa (stream_done)
 //
 // VERIFICAÇAO via HEX:
-//   HEX1:HEX0 = 8 bits menos significativos do contador de amostras
-//   Exemplo: para um WAV de 44100 Hz / 1 segundo -> contador chega a 0xAC44
+//   HEX3:HEX0 = 16 bits menos significativos do contador de amostras (amostras[15:0])
+//   Exemplo: para um WAV de 44100 Hz / 1 segundo -> 44100 = 0xAC44 (HEX3..0 = AC44)
 
 module top_wav_sd #(
     // -------------------------------------------------------
@@ -32,10 +32,9 @@ module top_wav_sd #(
     parameter [52*8-1:0] FILE_NAME     = "voice.wav"
 )(
     input  wire        CLOCK_50,
-    input  wire        KEY0,       // Reset ativo-baixo (botao na DE2-115)
+    input  wire        KEY0,        // Reset ativo-baixo (botao na DE2-115)
 
     // SD Card — SD mode (nao SPI)
-    // SD_CMD eh bidirecional: FPGA envia comandos, cartao responde no mesmo fio
     output wire        SD_CLK,
     inout  wire        SD_CMD,
     input  wire        SD_DAT0,
@@ -43,9 +42,11 @@ module top_wav_sd #(
     // LEDs de status (LEDR[3:0] na DE2-115)
     output wire [3:0]  LEDR,
 
-    // Displays 7-segmentos (HEX0 e HEX1, common-anode, ativo-baixo)
+    // Displays 7-segmentos (HEX0 a HEX3, common-anode, ativo-baixo)
     output wire [6:0]  HEX0,
-    output wire [6:0]  HEX1
+    output wire [6:0]  HEX1,
+    output wire [6:0]  HEX2,
+    output wire [6:0]  HEX3
 );
 
 // -------------------------------------------------------
@@ -96,10 +97,10 @@ wire        sample_valid;
 wire        stream_done;
 
 wav_reader u_wav_reader (
-    .clk          ( CLOCK_50   ),
-    .rst_n        ( rst_n      ),
-    .byte_in      ( outbyte    ),   // byte do arquivo
-    .byte_valid   ( outen      ),   // byte disponivel
+    .clk          ( CLOCK_50     ),
+    .rst_n        ( rst_n        ),
+    .byte_in      ( outbyte      ),
+    .byte_valid   ( outen        ),
     .sample_out   ( sample_out   ),
     .sample_valid ( sample_valid ),
     .stream_done  ( stream_done  )
@@ -107,48 +108,44 @@ wav_reader u_wav_reader (
 
 // -------------------------------------------------------
 // Contador de amostras (32 bits)
-// Incrementa a cada sample_valid — util para verificar
-// que o numero de amostras bate com o esperado do arquivo
 // -------------------------------------------------------
 reg [31:0] sample_count;
 
 always @(posedge CLOCK_50 or negedge rst_n) begin
     if (!rst_n)
-        sample_count <= 0;
+        sample_count <= 32'd0;
     else if (sample_valid)
-        sample_count <= sample_count + 1;
+        sample_count <= sample_count + 1'b1;
 end
 
 // -------------------------------------------------------
-// Toggle de LED: pisca a cada amostra recebida
-// (visivel a olho nu mesmo a 44100 Hz pois o LED "some" como cinza)
+// Toggle de LED: pisca durante a extracao das amostras
 // -------------------------------------------------------
 reg led_toggle;
 always @(posedge CLOCK_50 or negedge rst_n) begin
     if (!rst_n)
-        led_toggle <= 0;
+        led_toggle <= 1'b0;
     else if (sample_valid)
         led_toggle <= ~led_toggle;
 end
 
 // -------------------------------------------------------
 // Mapeamento dos LEDs
-// card_stat == 4'd8 significa que o sd_reader chegou ao
-// estado CMD17 (pronto para receber pedidos de leitura)
 // -------------------------------------------------------
-assign LEDR[0] = (card_stat >= 4'd8); // SD inicializado e pronto
-assign LEDR[1] = file_found;           // arquivo WAV encontrado
+assign LEDR[0] = (card_stat >= 4'd8); // SD pronto (CMD17)
+assign LEDR[1] = file_found;           // voice.wav encontrado
 assign LEDR[2] = led_toggle;           // pisca durante leitura
-assign LEDR[3] = stream_done;          // leitura 100% concluida
+assign LEDR[3] = stream_done;          // leitura concluida
 
 // -------------------------------------------------------
-// Display HEX: mostra os 8 bits baixos do sample_count
-// HEX0 = nibble baixo (bits 3:0)
-// HEX1 = nibble alto  (bits 7:4)
+// Display HEX: mostra os 16 bits baixos do sample_count
+// HEX0 = bits [3:0]
+// HEX1 = bits [7:4]
+// HEX2 = bits [11:8]
+// HEX3 = bits [15:12]
 // -------------------------------------------------------
 function [6:0] seg7;
     input [3:0] d;
-    // Segmentos: gfedcba (ativo-baixo, common-anode)
     case (d)
         4'h0: seg7 = 7'b1000000;
         4'h1: seg7 = 7'b1111001;
@@ -166,11 +163,13 @@ function [6:0] seg7;
         4'hD: seg7 = 7'b0100001;
         4'hE: seg7 = 7'b0000110;
         4'hF: seg7 = 7'b0001110;
-        default: seg7 = 7'b1111111; // apagado
+        default: seg7 = 7'b1111111;
     endcase
 endfunction
 
 assign HEX0 = seg7(sample_count[3:0]);
 assign HEX1 = seg7(sample_count[7:4]);
+assign HEX2 = seg7(sample_count[11:8]);
+assign HEX3 = seg7(sample_count[15:12]);
 
 endmodule
